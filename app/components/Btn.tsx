@@ -1,10 +1,44 @@
 import React, {useRef} from 'react';
-import Animated, {Easing, interpolate} from 'react-native-reanimated';
+import Animated, {Easing} from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
-import {View, TouchableOpacity} from 'react-native';
-type Props = {};
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {defaultGradient} from '../constants/constants';
 
-const Btn: React.FC<Props> = (props) => {
+type Props = {
+  onTopLeftPress: () => void;
+  onTopRightPress: () => void;
+  onBottomLeftPress: () => void;
+  onBottomRightPress: () => void;
+};
+
+const styles = StyleSheet.create({
+  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  mainButton: {flex: 1, width: 64, aspectRatio: 1},
+  smallButton: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#fff',
+    position: 'absolute',
+    borderRadius: 100,
+  },
+  gradientBg: {
+    borderRadius: 100,
+    flex: 1,
+  },
+  smallButtonsContainer: {
+    position: 'absolute',
+    borderRadius: 100,
+    width: 110,
+    height: 110,
+  },
+});
+
+const Btn: React.FC<Props> = ({
+  onTopLeftPress,
+  onTopRightPress,
+  onBottomLeftPress,
+  onBottomRightPress,
+}) => {
   const progress = Animated.useValue(0);
   const visible = useRef(false);
 
@@ -15,15 +49,12 @@ const Btn: React.FC<Props> = (props) => {
           ? startHideAnimation(progress, () => (visible.current = false))
           : startShowAnimation(progress, () => (visible.current = true));
       }}
-      style={{flex: 1, width: 64, aspectRatio: 1}}>
+      style={styles.mainButton}>
       <LinearGradient
-        style={{
-          borderRadius: 100,
-          flex: 1,
-        }}
+        style={styles.gradientBg}
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
-        colors={['#5851DB', '#C13584', '#E1306C', '#FD1D1D', '#F77737']}
+        colors={defaultGradient}
       />
     </TouchableOpacity>
   );
@@ -33,38 +64,28 @@ const Btn: React.FC<Props> = (props) => {
     outputRange: [0, 2],
   });
 
-  const btn = (x, y) => {
+  const btn = (x, y, onPress) => {
     return (
       <TouchableOpacity
-        onPress={() => {}}
-        style={{
-          width: 30,
-          height: 30,
-          backgroundColor: '#fff',
-          position: 'absolute',
-          borderRadius: 100,
-          top: 40 - y,
-          left: 40 - x,
-        }}
+        onPress={onPress}
+        style={[{top: 40 - y, left: 40 - x}, styles.smallButton]}
       />
     );
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={styles.container}>
       <Animated.View
-        style={{
-          transform: [{scale: scale}],
-          // backgroundColor: 'rgba(0,0,0,0.3)',
-          position: 'absolute',
-          borderRadius: 100,
-          width: 110,
-          height: 110,
-        }}>
-        {btn(28, 28)}
-        {btn(-28, -28)}
-        {btn(28, -28)}
-        {btn(-28, 28)}
+        style={[
+          {
+            transform: [{scale: scale}],
+          },
+          styles.smallButtonsContainer,
+        ]}>
+        {btn(28, 28, onTopLeftPress)}
+        {btn(-28, 28, onTopRightPress)}
+        {btn(-28, -28, onBottomRightPress)}
+        {btn(28, -28, onBottomLeftPress)}
       </Animated.View>
       {button}
     </View>

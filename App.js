@@ -6,19 +6,27 @@
  * @flow strict-local
  */
 
-import {View, TouchableOpacity} from 'react-native';
+import {View, Alert} from 'react-native';
 import React from 'react';
 import ScrollScreen from './app/screens/ScrollScreen';
 import FloatingButton from './app/components/FloatingButton';
-import LinearGradient from 'react-native-linear-gradient';
-import Animated from 'react-native-reanimated';
 import Btn from './app/components/Btn';
 
 const App = () => {
+  const btnPress = (position) => () => Alert.alert(position);
   return (
     <View style={{flex: 1}}>
       <ScrollScreen />
-      <FloatingButton children={<Btn />} />
+      <FloatingButton
+        children={
+          <Btn
+            onTopLeftPress={btnPress('top left')}
+            onTopRightPress={btnPress('top right')}
+            onBottomLeftPress={btnPress('bottom left')}
+            onBottomRightPress={btnPress('bottom right')}
+          />
+        }
+      />
     </View>
   );
 };
