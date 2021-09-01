@@ -40,7 +40,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - run: yarn lint
+      - run: yarn test
 
   test:
     runs-on: ubuntu-latest
